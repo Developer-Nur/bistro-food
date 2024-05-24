@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.menuImage{
+    border-radius: 49% 51% 61% 39% / 0% 53% 47% 100%;
+}
