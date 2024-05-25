@@ -33,13 +33,13 @@ const Menu = () => {
             ></Cover>
             <SectionTitle text="Get the offer for today" title="Todays Offer"></SectionTitle>
             
-            <MenuCategiry items={offered}></MenuCategiry>
+            <MenuCategiry items={offered} title="offers"></MenuCategiry>
             <Cover
                 text="Would you like to try a dish?"
                 title="DESSERTS"
                 img={DesirtedCover}
             ></Cover>
-            <MenuCategiry items={dessert}></MenuCategiry>
+            <MenuCategiry items={dessert} title="dessert"></MenuCategiry>
 
 
             {/* Pizza menu */}
@@ -48,7 +48,7 @@ const Menu = () => {
                 title="Pizza"
                 img={PizzaCover}
             ></Cover>
-            <MenuCategiry items={pizza}></MenuCategiry>
+            <MenuCategiry items={pizza} title="pizza"></MenuCategiry>
 
             {/* Salad menu */}
             <Cover
@@ -56,7 +56,7 @@ const Menu = () => {
                 title="Salad"
                 img={saladCover}
             ></Cover>
-            <MenuCategiry items={salad}></MenuCategiry>
+            <MenuCategiry items={salad} title="salad"></MenuCategiry>
 
 
 
@@ -66,7 +66,7 @@ const Menu = () => {
                 title="Soup"
                 img={SoupCover}
             ></Cover>
-            <MenuCategiry items={soup}></MenuCategiry>
+            <MenuCategiry items={soup} title="soup"></MenuCategiry>
 
         </div>
     );

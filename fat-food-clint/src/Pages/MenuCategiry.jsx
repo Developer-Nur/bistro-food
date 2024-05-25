@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import MenuItem from "../Compo/MenuItem";
 
-const MenuCategiry = ({ items }) => {
+const MenuCategiry = ({ items, title }) => {
 
     return (
         <div className="py-10">
@@ -13,7 +14,9 @@ const MenuCategiry = ({ items }) => {
                 }
             </div>
             <div className="w-full text-center">
-                <button className="btn btn-outline border-0 border-b-4">Order Our Favorite Food</button>
+                <Link to={`/shop/${title}`}>
+                    <button className="btn btn-outline border-0 border-b-4">Order Our Favorite Food</button>
+                </Link>
             </div>
         </div>
     );

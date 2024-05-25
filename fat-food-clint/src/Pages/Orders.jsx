@@ -6,17 +6,23 @@ import { useState } from "react";
 import FoodCard from "../Compo/FoodCard";
 import useFilterRecipy from "../Hooks/useFilterRecipy";
 import useMenu from "../Hooks/useMenu";
+import { useParams } from "react-router-dom";
 
 
 const Orders = () => {
-    const [tabIndex, setTabIndex] = useState(0);
+    const categores = ['salad', 'pizza', 'soup', 'dessert', 'drinks']
+    const { category } = useParams();
+    const initialeIndex = categores.indexOf(category);
+    const [tabIndex, setTabIndex] = useState(initialeIndex);
+
 
     const [menu, loader] = useMenu()
     const [dessert, soup, salad, pizza, drinks] = useFilterRecipy(menu);
+    console.log(category);
 
 
     if (loader) {
-        return <div>Loading...</div>;
+        return <div className="absolute top-1/2 right-1/2">Loading...</div>;
     }
 
 
@@ -62,8 +68,8 @@ const Orders = () => {
                             }
                         </div>
                     </TabPanel>
-                    
-                    
+
+
                     {/* Tab panel of soup */}
                     <TabPanel>
                         <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -75,8 +81,8 @@ const Orders = () => {
                             }
                         </div>
                     </TabPanel>
-                    
-                    
+
+
                     {/* Tab panel of dessert */}
                     <TabPanel>
                         <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -84,12 +90,14 @@ const Orders = () => {
                                 dessert && dessert.map(item => <FoodCard
                                     key={item._id}
                                     items={item}
-                                ></FoodCard>)
+                                >
+
+                                </FoodCard>)
                             }
                         </div>
                     </TabPanel>
-                    
-                    
+
+
                     {/* Tab panel of drinks */}
                     <TabPanel>
                         <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">

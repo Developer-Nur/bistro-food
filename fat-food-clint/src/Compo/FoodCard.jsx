@@ -8,11 +8,11 @@ const FoodCard = ({ items }) => {
                 <img src={image} alt="Shoes" />
                 <figcaption className="absolute top-4 left-4 py-1 px-2 rounded-lg bg-orange-400 text-black">${price}</figcaption>
             </figure>
-            <div className="card-body">
+            <div className="card-body flex flex-col items-center space-y-3">
                 <h2 className="card-title">{name}</h2>
-                <p>{recipe}</p>
+                <p className="text-center">{recipe}</p>
                 <div className="card-actions justify-end">
-                    <button className="btn btn-outline border-0 border-b-4">Add to card</button>
+                    <button className="btn btn-outline border-0 border-b-4 bg-slate-200 border-orange-300 hover:text-orange-300">Add to card</button>
                 </div>
             </div>
         </div>
