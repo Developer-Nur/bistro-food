@@ -8,7 +8,8 @@ const Root = () => {
     const location = useLocation();
 
     // to check if the current location is login or not
-    const noHeaderFooter = location.pathname.includes('login');
+    const noHeaderFooter = location.pathname.includes('login')
+        || location.pathname.includes('register');
 
 
     return (

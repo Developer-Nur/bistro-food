@@ -1,14 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { AuthContext } from '../Providers/ContextProvider';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+    const { singinUser, loader } = useContext(AuthContext);
     const [disabled, setDisabled] = useState(true);
-    const captchaRef = useRef(null);
+    const navigation = useNavigate();
+
+
 
     useEffect(() => {
-        loadCaptchaEnginge(6); 
+        loadCaptchaEnginge(6);
     }, [])
+
+
+    if (loader) {
+        return <div><p>Loading....</p></div>
+    }
 
     const handleLogin = event => {
         event.preventDefault();
@@ -17,22 +27,31 @@ const Login = () => {
         const password = form.password.value;
 
         console.log(email, password);
+
+        singinUser(email, password)
+            .then(result => {
+                const user = result.user;
+                navigation("/")
+                alert("Login success")
+            })
     }
 
-    const handleCaptchaValidat = () => {
-        const user_captcha_value = captchaRef.current.value;
+    const handleCaptchaValidat = (e) => {
+        const user_captcha_value = e.target.value;
 
-        if(validateCaptcha(user_captcha_value)){
+        console.log("capcha", user_captcha_value);
+
+        if (validateCaptcha(user_captcha_value)) {
             setDisabled(false)
         }
-        else{ setDisabled(true)}
+        else { setDisabled(true) }
     }
 
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row-reverse">
 
-                <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                <div className="card w-full shadow-2xl nav-bg">
                     <form onSubmit={handleLogin} className="card-body">
                         <div className="form-control">
                             <label className="label">
@@ -40,6 +59,7 @@ const Login = () => {
                             </label>
                             <input name='email' type="email" placeholder="email" className="input input-bordered" required />
                         </div>
+
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
@@ -49,20 +69,33 @@ const Login = () => {
                                 <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                             </label>
                         </div>
+
+                        {/* captcha */}
                         <div className="form-control">
                             <label className="label">
                                 <LoadCanvasTemplate />
                             </label>
-                            <input ref={captchaRef} name='captha' type="text" placeholder="Type here" className="input input-bordered" required />
-
-                            <button onClick={handleCaptchaValidat} className='my-3 btn btn-outline btn-xs'>
-                                validate captcha
-                            </button>
+                            <input onBlur={handleCaptchaValidat} type="text" className='mb-3 input input-bordered block'  placeholder='Type here'/>
                         </div>
 
                         <input disabled={disabled} type="submit" value='Submit' className="btn btn-primary" />
 
+                        <div className="text-center">
+                            <div className="divider">OR</div>
+                            <section className="space-x-6">
+                                <button className="shadow-xl btn btn-ghost">Login with Google</button>
+                                <button className="shadow-xl btn btn-ghost">Login with GitHub</button>
+                            </section>
+                        </div>
                     </form>
+                    <div className='card-body pt-0'>
+                        <p className="accent-color mt-6">Have an account?
+                            <span className="underline prim-title hover:text-[#F36F1B]">
+                                <Link to='/register'> Register</Link></span>
+                        </p>
+                    </div>
+
+
                 </div>
             </div>
         </div>
