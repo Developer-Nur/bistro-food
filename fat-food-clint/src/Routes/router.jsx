@@ -4,6 +4,7 @@ import ErrorPage from "../Pages/ErrorPage";
 import Home from "../Pages/Home";
 import Menu from "../Pages/Menu";
 import Orders from "../Pages/Orders";
+import Login from "../Pages/Login";
 
 
 export const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "shop/:category",
         element: <Orders></Orders>,
+      },
+      {
+        path: "login",
+        element: <Login></Login>,
       }
     ]
   },

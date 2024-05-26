@@ -7,6 +7,7 @@ import FoodCard from "../Compo/FoodCard";
 import useFilterRecipy from "../Hooks/useFilterRecipy";
 import useMenu from "../Hooks/useMenu";
 import { useParams } from "react-router-dom";
+import OrderTab from "../Compo/OrderTab";
 
 
 const Orders = () => {
@@ -47,67 +48,30 @@ const Orders = () => {
 
                     {/* Tab panel of Salad */}
                     <TabPanel>
-                        <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {
-                                salad && salad.map(item => <FoodCard
-                                    key={item._id}
-                                    items={item}
-                                ></FoodCard>)
-                            }
-                        </div>
+                        <OrderTab items={salad}></OrderTab>
                     </TabPanel>
 
                     {/* Tab panel of Pizza */}
                     <TabPanel>
-                        <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {
-                                pizza && pizza.map(item => <FoodCard
-                                    key={item._id}
-                                    items={item}
-                                ></FoodCard>)
-                            }
-                        </div>
+                        <OrderTab items={pizza}></OrderTab>
                     </TabPanel>
 
 
                     {/* Tab panel of soup */}
                     <TabPanel>
-                        <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {
-                                soup && soup.map(item => <FoodCard
-                                    key={item._id}
-                                    items={item}
-                                ></FoodCard>)
-                            }
-                        </div>
+                        <OrderTab items={soup}></OrderTab>
                     </TabPanel>
 
 
                     {/* Tab panel of dessert */}
                     <TabPanel>
-                        <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {
-                                dessert && dessert.map(item => <FoodCard
-                                    key={item._id}
-                                    items={item}
-                                >
-
-                                </FoodCard>)
-                            }
-                        </div>
+                        <OrderTab items={dessert}></OrderTab>
                     </TabPanel>
 
 
                     {/* Tab panel of drinks */}
                     <TabPanel>
-                        <div className="text-left grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {
-                                drinks && drinks.map(item => <FoodCard
-                                    key={item._id}
-                                    items={item}
-                                ></FoodCard>)
-                            }
-                        </div>
+                        <OrderTab items={drinks}></OrderTab>
                     </TabPanel>
                 </Tabs>
             </div>

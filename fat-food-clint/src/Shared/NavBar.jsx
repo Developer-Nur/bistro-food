@@ -6,10 +6,11 @@ const NavBar = () => {
         <li><Link to="/">Home</Link></li>
         <li><Link to="/menu">Our Menu</Link></li>
         <li><Link to="/shop/salad">Our Shop</Link></li>
+        <li><Link to="/login">Login</Link></li>
     </>
 
     return (
-        <div className="navbar opacity-65 text-black fixed z-10 max-w-7xl	mx-auto w-full px-6 md:px-0 lg:px-0 md:w-11/12 lg:w-11/12 bg-white">
+        <div className="navbar text-white fixed z-10 max-w-7xl	mx-auto w-full px-6 md:px-0 lg:px-0 md:w-11/12 lg:w-11/12 bg-orange-500">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
