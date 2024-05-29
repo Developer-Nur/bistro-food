@@ -31,6 +31,8 @@ async function run() {
         const menuCollection = client.db("foodDB").collection("menu");
         // user data collection
         const reviewCollection = client.db("foodDB").collection("review");
+        
+        const cardsCollection = client.db("foodDB").collection("cards");
 
         // api for all food item
         app.get('/menu', async (req, res) => {
@@ -44,7 +46,20 @@ async function run() {
             res.send(result)
         })
 
+        // post ordered item in the DB
+        app.post('/cards', async (req, res)=> {
+            const cardsItem = req.body;
+            const result = await cardsCollection.insertOne(cardsItem)
+            res.send(result);
+        })
 
+        // get all ordered items api
+        app.get('/cards', async (req, res) => {
+            const email = req.query.email;
+            const query = {email: email}
+            const result = await cardsCollection.find(query).toArray();
+            res.send(result)
+        })
 
 
 

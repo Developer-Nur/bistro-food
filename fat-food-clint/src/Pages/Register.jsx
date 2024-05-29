@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 
 const Singup = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser } = useContext(AuthContext);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { createUser, updaleProfileOfUser, logOut } = useContext(AuthContext);
     const navigation = useNavigate();
 
 
@@ -16,13 +16,20 @@ const Singup = () => {
         console.log(data);
 
         createUser(data.email, data.password)
-        .then(res => {
-            const loggedUser = res.user;
-            navigation("/")
-            alert("Register success")
+            .then(res => {
+                const loggedUser = res.user;
+                updaleProfileOfUser(data.name, data.image)
+                    .then()
+                    .catch((error) => console.log(error.message))
+                    reset()
+                alert("Register success, please login")
+                logOut()
+                    .then()
+                    .catch(error => console.log(error.message))
+                navigation('/login')
 
-        })
-        .catch(error => console.log(error.message))
+            })
+            .catch(error => console.log(error.message))
     };
 
 
@@ -34,13 +41,21 @@ const Singup = () => {
             <h3 className="text-4xl text-center p-10">Sing UP!</h3>
             <div className="md:w-2/4 mx-auto mt-[30px] nav-bg shadow-2xl rounded-lg p-4">
                 <form onSubmit={handleSubmit(onSubmit)} className="card-body font-poppins">
-
+                    <Link to={'/'}><button className='btn-ghost text-center p-4'>Go Home</button></Link>
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Name</span>
                         </label>
                         <input  {...register("name", { required: true })} type="text" placeholder="Your Name" className="input input-bordered" />
                         {errors.name && <p>This field is required</p>}
+                    </div>
+
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Image</span>
+                        </label>
+                        <input  {...register("image", { required: true })} type="text" placeholder="Your Name" className="input input-bordered" />
+                        {errors.image && <p>Put image URL</p>}
                     </div>
 
                     <div className="form-control">

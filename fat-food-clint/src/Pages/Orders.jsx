@@ -19,7 +19,6 @@ const Orders = () => {
 
     const [menu, loader] = useMenu()
     const [dessert, soup, salad, pizza, drinks] = useFilterRecipy(menu);
-    console.log(category);
 
 
     if (loader) {

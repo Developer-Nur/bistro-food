@@ -1,24 +1,31 @@
 import { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { AuthContext } from '../Providers/ContextProvider';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
     const { singinUser, loader } = useContext(AuthContext);
     const [disabled, setDisabled] = useState(true);
-    const navigation = useNavigate();
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    console.log("loction", location.state);
 
 
     useEffect(() => {
-        loadCaptchaEnginge(6);
-    }, [])
+        // Adding a slight delay to ensure the captcha component is mounted
+        const timer = setTimeout(() => {
+            loadCaptchaEnginge(6);
+        }, 1000); // 50 ms delay
+
+        return () => clearTimeout(timer);
+    }, []);
 
 
-    if (loader) {
-        return <div><p>Loading....</p></div>
-    }
+    // if (loader) {
+    //     return <div><p>Loading....</p></div>
+    // }
 
     const handleLogin = event => {
         event.preventDefault();
@@ -31,8 +38,8 @@ const Login = () => {
         singinUser(email, password)
             .then(result => {
                 const user = result.user;
-                navigation("/")
                 alert("Login success")
+                navigate(from, { replace: true });
             })
     }
 
@@ -49,9 +56,11 @@ const Login = () => {
 
     return (
         <div className="hero min-h-screen bg-base-200">
+
             <div className="hero-content flex-col lg:flex-row-reverse">
 
                 <div className="card w-full shadow-2xl nav-bg">
+                    <Link to={'/'}><button className='btn-ghost text-center p-4'>Go Home</button></Link>
                     <form onSubmit={handleLogin} className="card-body">
                         <div className="form-control">
                             <label className="label">
@@ -75,10 +84,10 @@ const Login = () => {
                             <label className="label">
                                 <LoadCanvasTemplate />
                             </label>
-                            <input onBlur={handleCaptchaValidat} type="text" className='mb-3 input input-bordered block'  placeholder='Type here'/>
+                            <input onBlur={handleCaptchaValidat} type="text" className='mb-3 input input-bordered block' placeholder='Type here' />
                         </div>
 
-                        <input disabled={disabled} type="submit" value='Submit' className="btn btn-primary" />
+                        <input disabled={false} type="submit" value='Submit' className="btn btn-primary" />
 
                         <div className="text-center">
                             <div className="divider">OR</div>
@@ -94,8 +103,6 @@ const Login = () => {
                                 <Link to='/register'> Register</Link></span>
                         </p>
                     </div>
-
-
                 </div>
             </div>
         </div>

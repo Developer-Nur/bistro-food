@@ -1,10 +1,16 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Providers/ContextProvider";
+import { TiShoppingCart } from "react-icons/ti";
+import useCards from "../Hooks/useCards";
 
 const NavBar = () => {
 
     const { user, loader, logOut } = useContext(AuthContext);
+
+    // data from transtec query
+    const [card] = useCards ();
+
 
     const handleLogout = () => {
         logOut()
@@ -17,13 +23,11 @@ const NavBar = () => {
         <li><Link to="/menu">Our Menu</Link></li>
         <li><Link to="/shop/salad">Our Shop</Link></li>
         {
-            user ? <>
-                <button onClick={handleLogout} className="btn">Logout</button>
-            </> : <>
+            !user && <>
                 <li><Link to="/login">Login</Link></li>
-                <li><Link to="/register">Register</Link></li>
-            </>
+                <li><Link to="/register">Register</Link></li></>
         }
+        <li><Link to="/secret">Secret</Link></li>
     </>
 
 
@@ -52,10 +56,22 @@ const NavBar = () => {
                     {navBar}
                 </ul>
             </div>
+
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {
+                    user && <div className="flex gap-2">
+                        <span>{user?.displayName}</span>
+                        <button onClick={handleLogout} className="py-1 px-2 rounded-lg btn-ghost">Logout</button>
+                    </div>
+                }
+                <Link to="/">
+                    <button className="btn">
+                        <TiShoppingCart />
+                        <div className="badge badge-secondary">{card.length}</div>
+                    </button>
+                </Link>
             </div>
-        </div>
+        </div >
     );
 };
 
