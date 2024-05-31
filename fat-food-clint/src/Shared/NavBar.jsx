@@ -31,9 +31,9 @@ const NavBar = () => {
     </>
 
 
-    if (loader) {
-        return <div><p>Loading....</p></div>
-    }
+    // if (loader) {
+    //     return <div><p>Loading....</p></div>
+    // }
 
     return (
         <div className="navbar text-white fixed z-10 max-w-7xl	mx-auto w-full px-6 md:px-0 lg:px-0 md:w-11/12 lg:w-11/12 bg-orange-500">
@@ -64,7 +64,7 @@ const NavBar = () => {
                         <button onClick={handleLogout} className="py-1 px-2 rounded-lg btn-ghost">Logout</button>
                     </div>
                 }
-                <Link to="/">
+                <Link to="/dashboard/cart">
                     <button className="btn">
                         <TiShoppingCart />
                         <div className="badge badge-secondary">{card.length}</div>

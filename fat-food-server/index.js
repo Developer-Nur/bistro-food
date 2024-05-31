@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
@@ -31,8 +31,23 @@ async function run() {
         const menuCollection = client.db("foodDB").collection("menu");
         // user data collection
         const reviewCollection = client.db("foodDB").collection("review");
-        
+
         const cardsCollection = client.db("foodDB").collection("cards");
+        const userCollection = client.db("foodDB").collection("users");
+
+
+
+        // user realted api
+        app.post('/create-user', async (req, res)=> {
+            const user = req.body;
+            const query = {email: user.email}
+            const axisestingUserEmail = await userCollection.findOne(query);
+            if(axisestingUserEmail){
+                return res.send({message: "User already exists", insertedId: null})
+            }
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
 
         // api for all food item
         app.get('/menu', async (req, res) => {
@@ -47,7 +62,7 @@ async function run() {
         })
 
         // post ordered item in the DB
-        app.post('/cards', async (req, res)=> {
+        app.post('/cards', async (req, res) => {
             const cardsItem = req.body;
             const result = await cardsCollection.insertOne(cardsItem)
             res.send(result);
@@ -56,8 +71,16 @@ async function run() {
         // get all ordered items api
         app.get('/cards', async (req, res) => {
             const email = req.query.email;
-            const query = {email: email}
+            const query = { email: email }
             const result = await cardsCollection.find(query).toArray();
+            res.send(result)
+        });
+
+        // delete item api
+        app.delete('/delete-card/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await cardsCollection.deleteOne(query)
             res.send(result)
         })
 

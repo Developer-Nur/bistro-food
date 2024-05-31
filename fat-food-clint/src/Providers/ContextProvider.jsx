@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import { auth } from "../firebase/firebase.config";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+
+
 
 export const AuthContext = createContext();
+const provider = new GoogleAuthProvider();
 
 const ContextProvider = ({ children }) => {
     const [user, setUser] = useState();
@@ -35,6 +38,12 @@ const ContextProvider = ({ children }) => {
         })
     }
 
+    // handle social sing in
+    const googleSingin = () => {
+        setLoader(true)
+        return signInWithPopup(auth, provider)
+    }
+
     // USER observer
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
@@ -47,7 +56,7 @@ const ContextProvider = ({ children }) => {
     }, []);
 
     const authInfo = {
-        loader, user, singinUser, createUser, logOut, updaleProfileOfUser
+        googleSingin, loader, user, singinUser, createUser, logOut, updaleProfileOfUser, setLoader
     }
 
     return (

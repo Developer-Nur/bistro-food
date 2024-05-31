@@ -8,6 +8,8 @@ import Login from "../Pages/Login";
 import Singup from "../Pages/Register";
 import PrivetRouter from "../PrivetRouter/PrivetRouter";
 import Secret from "../Pages/Secret";
+import Dashboard from "../Layout/Dashboard";
+import Carts from "../Pages/Dashboard/Carts";
 
 
 export const router = createBrowserRouter([
@@ -38,8 +40,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "secret",
-        element: <PrivetRouter><Secret></Secret></PrivetRouter>
+        element: <PrivetRouter><Secret></Secret></PrivetRouter>,
       },
     ]
   },
+
+  // routers for admin
+  {
+    path: 'dashboard',
+    element: <PrivetRouter><Dashboard></Dashboard></PrivetRouter>,
+    // errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path: 'cart',
+        element: <Carts></Carts>,
+      }
+    ]
+  }
 ]);

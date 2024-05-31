@@ -2,18 +2,25 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/ContextProvider";
 import { useForm } from "react-hook-form";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import SocialSingin from "../Shared/SocialSingin";
 
 
 const Singup = () => {
 
+    const axiosPublic = useAxiosPublic();
+
+    // react hook form
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+    // context provider
     const { createUser, updaleProfileOfUser, logOut } = useContext(AuthContext);
     const navigation = useNavigate();
 
 
 
     const onSubmit = (data) => {
-        console.log(data);
+
 
         createUser(data.email, data.password)
             .then(res => {
@@ -21,19 +28,27 @@ const Singup = () => {
                 updaleProfileOfUser(data.name, data.image)
                     .then()
                     .catch((error) => console.log(error.message))
-                    reset()
-                alert("Register success, please login")
+                reset()
+                // alert("Register success, please login")
                 logOut()
                     .then()
                     .catch(error => console.log(error.message))
-                navigation('/login')
 
+                // creating users to the database
+                const userInFoForDb = {
+                    name: data.name,
+                    email: data.email,
+                }
+                axiosPublic.post('/create-user', userInFoForDb)
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            alert("Register success, please login");
+                            navigation('/login')
+                        }
+                    })
             })
             .catch(error => console.log(error.message))
     };
-
-
-
 
 
     return (
@@ -78,6 +93,9 @@ const Singup = () => {
                     </div>
 
                 </form>
+                <div className="divider"></div>
+                <SocialSingin/>
+                <div className="divider"></div>
                 <p className="accent-color mt-6">Have an account?<span className="underline prim-title hover:text-[#F36F1B]">
                     <Link to='/login'> Login</Link></span></p>
             </div>

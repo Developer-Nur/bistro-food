@@ -2,15 +2,17 @@ import { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { AuthContext } from '../Providers/ContextProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import SocialSingin from '../Shared/SocialSingin';
 
 const Login = () => {
 
     const { singinUser, loader } = useContext(AuthContext);
     const [disabled, setDisabled] = useState(true);
+    
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
-    console.log("loction", location.state);
+    // console.log("loction", location.state);
 
 
     useEffect(() => {
@@ -33,7 +35,7 @@ const Login = () => {
         const email = form.email.value;
         const password = form.password.value;
 
-        console.log(email, password);
+
 
         singinUser(email, password)
             .then(result => {
@@ -89,14 +91,12 @@ const Login = () => {
 
                         <input disabled={false} type="submit" value='Submit' className="btn btn-primary" />
 
-                        <div className="text-center">
-                            <div className="divider">OR</div>
-                            <section className="space-x-6">
-                                <button className="shadow-xl btn btn-ghost">Login with Google</button>
-                                <button className="shadow-xl btn btn-ghost">Login with GitHub</button>
-                            </section>
-                        </div>
                     </form>
+                    <div className="text-center">
+                        <div className="divider">OR</div>
+                        <SocialSingin />
+                    </div>
+                    <div className='divider'></div>
                     <div className='card-body pt-0'>
                         <p className="accent-color mt-6">Have an account?
                             <span className="underline prim-title hover:text-[#F36F1B]">
