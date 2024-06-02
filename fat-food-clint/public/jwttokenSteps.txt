@@ -1,0 +1,33 @@
+============ Secure info in the app using JWT (via local storage)==================
+
+1, Install JWT to clint side
+2, Generate Token and set the token in the server side in .env file. use 
+(require('crypto').randomBytes(64).toString('hex')) to generate a token.
+
+3, Create an Api to send the token to the clint side
+4, Call the  token api to get the token from server side to clint
+5, Set it to local storage, add the token and remove with user login and logout  (use http post method to in the api)
+
+6, Send the token via Axios header and receive it on the server side in the api that must be Secure ( Send the token can send from a central place, axios request interceptor, instead of sending from several places)
+
+
+7, Declare a middle-were to verify the token,
+        DEMO 
+        ============================= ( const verifyToken = (req, res, next) => {
+                if (!req.headers.authorization) {
+                    return res.status(401).send({ message: 'Forbidden Access' })
+                }
+                const token = req.headers.authorization.split(' ')[1];
+                console.log("The token is: ", token);
+                jwt.verify(token, process.env.Access_Token, (err, decoded) => {
+                    if (err) {
+                        return res.status(401).send({ message: 'Forbidden Access' })
+                    }
+                    req.decoded = decoded
+                    next()
+                });
+            })=============================
+
+8, Add the middle-were in the api that must be secure, (adding the middle-were will take the token and verify)
+
+ ====(do the interceptor correctly to secure the data,)====

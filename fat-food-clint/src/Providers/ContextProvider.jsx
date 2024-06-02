@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createContext } from "react";
 import { auth } from "../firebase/firebase.config";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 
 
@@ -11,6 +12,7 @@ const provider = new GoogleAuthProvider();
 const ContextProvider = ({ children }) => {
     const [user, setUser] = useState();
     const [loader, setLoader] = useState(true);
+    const axiosPublic = useAxiosPublic()
 
     // CREATE USER
     const createUser = (email, password) => {
@@ -28,6 +30,7 @@ const ContextProvider = ({ children }) => {
     // sing out 
     const logOut = () => {
         setLoader(true)
+        localStorage.removeItem('access-token');
         return signOut(auth)
     }
 
@@ -48,12 +51,28 @@ const ContextProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser)
+            // jwt token loder
+            const userInfo = {
+                email: currentUser.email
+            }
+            if (currentUser) {
+                axiosPublic.post('/jwt', userInfo)
+                    .then(res => {
+                        if (res.data.token) {
+                            localStorage.setItem('access-token', res.data.token)
+                        }
+                    })
+            }
+            else {
+                // Remove token
+                localStorage.removeItem('access-token');
+            }
             setLoader(false)
         });
         return () => {
             return unsubscribe()
         }
-    }, []);
+    }, [axiosPublic]);
 
     const authInfo = {
         googleSingin, loader, user, singinUser, createUser, logOut, updaleProfileOfUser, setLoader

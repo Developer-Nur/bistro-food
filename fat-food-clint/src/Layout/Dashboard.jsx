@@ -1,10 +1,14 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { TiShoppingCart } from "react-icons/ti";
-import { FaHome, FaList } from "react-icons/fa";
+import { FaHome, FaList, FaUtensils } from "react-icons/fa";
+import useCards from "../Hooks/useCards";
+import useAdmin from "../Hooks/useAdmin";
 
 const Dashboard = () => {
 
-    const isAdmin = true;
+    const [card] = useCards()
+
+    const [isAdmin] = useAdmin();
 
     return (
         <div className="flex  overflow-hidden ">
@@ -22,7 +26,7 @@ const Dashboard = () => {
                                 </li>
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">
-                                    <TiShoppingCart size={23} />
+                                    <FaUtensils size={23} />
                                     <NavLink to='/dashboard/'>add items</NavLink>
                                 </li>
 
@@ -38,13 +42,10 @@ const Dashboard = () => {
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">
                                     <TiShoppingCart size={23} />
-                                    <NavLink to='/dashboard/cart'>all users</NavLink>
+                                    <NavLink to='/dashboard/users'>all users</NavLink>
                                 </li>
 
-                                <li className="uppercase hover:text-white flex items-start gap-2">
-                                    <TiShoppingCart size={23} />
-                                    <NavLink to='/dashboard/cart'>My Booking</NavLink>
-                                </li>
+                                
                             </>
 
                             :
@@ -69,7 +70,7 @@ const Dashboard = () => {
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">
                                     <TiShoppingCart size={23} />
-                                    <NavLink to='/dashboard/cart'>My Cards</NavLink>
+                                    <NavLink to='/dashboard/cart'>My Cards ({card.length})</NavLink>
                                 </li>
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">
