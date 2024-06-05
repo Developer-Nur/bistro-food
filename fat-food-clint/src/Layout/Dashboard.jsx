@@ -7,8 +7,13 @@ import useAdmin from "../Hooks/useAdmin";
 const Dashboard = () => {
 
     const [card] = useCards()
+    
 
-    const [isAdmin] = useAdmin();
+    const [isAdmin, isLoading] = useAdmin();
+
+    if(isLoading){
+        return <p>Loading...</p>
+    }
 
     return (
         <div className="flex  overflow-hidden ">
@@ -27,7 +32,7 @@ const Dashboard = () => {
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">
                                     <FaUtensils size={23} />
-                                    <NavLink to='/dashboard/'>add items</NavLink>
+                                    <NavLink to='/dashboard/addItems'>add items</NavLink>
                                 </li>
 
                                 <li className="uppercase hover:text-white flex items-start gap-2">

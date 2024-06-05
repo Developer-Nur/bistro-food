@@ -3,14 +3,17 @@ import SectionTitle from "../../Compo/SectionTitle";
 import useCards from "../../Hooks/useCards";
 import Swal from "sweetalert2";
 import useBaseUrl from "../../Hooks/useBaseUrl";
+import { Link } from "react-router-dom";
 
 
 const Carts = () => {
 
-    const [card, refetch, isLoading] = useCards();
+    const [cart, refetch, isLoading] = useCards();
     const axiosSecure = useBaseUrl();
 
-    const priceSum = card.reduce((accumulator, item) => accumulator + item.price, 0);
+    const priceSum = cart.reduce((sum, item) => sum + item.price, 0);
+    // console.log("the ultimate total amount is", priceSum)
+
 
     const handleDeleteFromCart = id => {
         Swal.fire({
@@ -57,9 +60,13 @@ const Carts = () => {
                 isLoading ? <p>Loading...</p> :
                     <div className="px-20 w-full mx-auto">
                         <div className=" flex justify-between items-center">
-                            <h2>Total bookings: {card.length}</h2>
+                            <h2>Total bookings: {cart.length}</h2>
                             <h2>total price: ${priceSum}</h2>
-                            <button className="btn bg-orange-500">Pay</button>
+                            {
+                                cart.length ? <Link to='/dashboard/payment'>
+                                    <button className="btn bg-orange-500">Pay</button>
+                                </Link> : <button disabled className="btn bg-orange-500">Pay</button>
+                            }
                         </div>
                         {/* table */}
 
@@ -79,7 +86,7 @@ const Carts = () => {
                                     {/* dynamic content */}
 
                                     {
-                                        card.map((item, index) => <tr key={index}>
+                                        cart.map((item, index) => <tr key={index}>
                                             <td>
                                                 {index + 1}
                                             </td>

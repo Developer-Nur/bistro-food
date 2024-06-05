@@ -3,7 +3,6 @@ import CoverImg from "../../public/assets/shop/banner2.jpg";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { useState } from "react";
-import FoodCard from "../Compo/FoodCard";
 import useFilterRecipy from "../Hooks/useFilterRecipy";
 import useMenu from "../Hooks/useMenu";
 import { useParams } from "react-router-dom";

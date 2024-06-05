@@ -11,9 +11,13 @@ import Secret from "../Pages/Secret";
 import Dashboard from "../Layout/Dashboard";
 import Carts from "../Pages/Dashboard/Carts";
 import AllUsers from "../Pages/Dashboard/AllUsers";
+import AddItems from "../Pages/Dashboard/AddItems";
+import AdminRouter from "../PrivetRouter/AdminRouter";
+import Payment from "../Pages/Dashboard/Payment";
 
 
 export const router = createBrowserRouter([
+  // routes for regular users
   {
     path: "/",
     element: <Root></Root>,
@@ -43,10 +47,11 @@ export const router = createBrowserRouter([
         path: "secret",
         element: <PrivetRouter><Secret></Secret></PrivetRouter>,
       },
+
     ]
   },
 
-  // routers for admin
+
   {
     path: 'dashboard',
     element: <PrivetRouter><Dashboard></Dashboard></PrivetRouter>,
@@ -56,12 +61,19 @@ export const router = createBrowserRouter([
         path: 'cart',
         element: <Carts></Carts>,
       },
+      {
+        path: "payment",
+        element: <Payment></Payment>,
+      },
 
-      // admin routes
-
+      // routers for admin
       {
         path: 'users',
-        element: <AllUsers></AllUsers>
+        element: <AdminRouter><AllUsers></AllUsers></AdminRouter>
+      },
+      {
+        path: 'addItems',
+        element: <AdminRouter><AddItems></AddItems></AdminRouter>,
       },
 
     ]

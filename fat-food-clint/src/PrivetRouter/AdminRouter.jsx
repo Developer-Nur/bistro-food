@@ -1,12 +1,15 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useAdmin from "../Hooks/useAdmin";
 import useUserinfo from "../Hooks/useUserinfo";
+import { useContext } from "react";
+import { AuthContext } from "../Providers/ContextProvider";
 
 
-const AdminRouter = ({children}) => {
+const AdminRouter = ({ children }) => {
 
     const [isAdmin, isPending] = useAdmin();
     const { user, loader } = useUserinfo();
+    const { logOut } = useContext(AuthContext)
 
     const location = useLocation();
 
@@ -16,8 +19,11 @@ const AdminRouter = ({children}) => {
     if (user && isAdmin) {
         return children;
     }
-
+    else {
+        logOut()
+    }
     return <Navigate to='/login' state={{ from: location }} replace></Navigate>
+
 
 };
 

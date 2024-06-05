@@ -10,7 +10,7 @@ const useCards = () => {
     const {user} = useUserinfo()
 ;    // tarnstec query code to get data from api
 
-    const { refetch , data: card = [], isLoading } = useQuery({
+    const { refetch , data: cart = [], isPending } = useQuery({
         queryKey: ['card', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/cards?email=${user.email}`);
@@ -21,7 +21,7 @@ const useCards = () => {
 
 
 
-    return [card, refetch, isLoading];
+    return [cart, refetch, isPending];
 };
 
 export default useCards;

@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+// This is your test secret API key.
+const stripe = require("stripe")('sk_test_51PNpAdHm1IjJVAvYssSn2pgM0srTrNGokYWFfdNB0vS9SiGQlPbcB3FfJjulredUVpLKWdfuy4DTjpwjwyxsVms800LPLqqQwx');
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 require('dotenv').config();
 const port = process.env.PORT || 5000;
@@ -9,6 +11,7 @@ const port = process.env.PORT || 5000;
 
 // middle were
 app.use(cors())
+app.use(express.static("public"));
 app.use(express.json())
 
 
@@ -35,6 +38,7 @@ async function run() {
 
         const cardsCollection = client.db("foodDB").collection("cards");
         const userCollection = client.db("foodDB").collection("users");
+        const paymentCollection = client.db("foodDB").collection("payments");
 
 
         // send token api 
@@ -67,7 +71,7 @@ async function run() {
             const user = await userCollection.findOne(query)
             const isAdmin = user?.role === "admin";
             if (!isAdmin) {
-                return res.status(403).send({message: "Forbidden Access"})
+                return res.status(403).send({ message: "Forbidden Access" })
             }
             next();
         }
@@ -93,7 +97,6 @@ async function run() {
                 admin = user?.role === "admin";
             }
             res.send({ admin })
-
         })
 
 
@@ -158,12 +161,51 @@ async function run() {
         });
 
         // delete item api
-        app.delete('/delete-card/:id', verifyToken, verifyAdmin, async (req, res) => {
+        app.delete('/delete-card/:id', verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await cardsCollection.deleteOne(query)
             res.send(result)
         })
+
+        // add food itme api
+        app.post('/add-menu-item', verifyToken, verifyAdmin, async (req, res) => {
+            const item = req.body;
+            const result = await menuCollection.insertOne(item)
+            res.send(result)
+        })
+
+        // stripe related codes
+        app.post("/create-payment-intent", async (req, res) => {
+            const { price } = req.body;
+            const toatlAmount = parseInt(price * 100)
+
+            // console.log("Total amount", toatlAmount);
+
+
+            // Create a PaymentIntent with the order amount and currency
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: toatlAmount,
+                currency: "usd",
+                // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+                payment_method_types: ['card']
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
+        // set paid itme with detail to db
+        app.post('/payments', async (req, res) => {
+            const paymentDetail = req.body;
+            console.log("data from paid items", paymentDetail);
+            const result = await paymentCollection.insertOne(paymentDetail)
+            res.send(result)
+        })
+
+
+
 
 
 
@@ -183,9 +225,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-
-
 
 app.get('/', (req, res) => {
     res.send("Fat Food")

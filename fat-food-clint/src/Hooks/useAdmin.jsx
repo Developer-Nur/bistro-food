@@ -12,16 +12,16 @@ const useAdmin = () => {
     const axioxSecure = useBaseUrl();
 
     // calling the user admin api
-    const {data: isAdmin, isPending} = useQuery({
+    const {data: isAdmin, isLoading} = useQuery({
         queryKey: [user?.email, 'isAdmin'],
         queryFn: async () => {
             const res = await axioxSecure.get(`/user-admin/${user.email}`)
-            console.log("admin data is ",res.data);
+            // console.log("admin data is ",res.data);
             return res.data?.admin;
         }
     });
 
-    return [isAdmin, isPending]
+    return [isAdmin, isLoading]
 };
 
 export default useAdmin;
