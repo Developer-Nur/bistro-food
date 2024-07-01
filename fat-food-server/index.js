@@ -3,9 +3,9 @@ const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 // This is your test secret API key.
-const stripe = require("stripe")('sk_test_51PNpAdHm1IjJVAvYssSn2pgM0srTrNGokYWFfdNB0vS9SiGQlPbcB3FfJjulredUVpLKWdfuy4DTjpwjwyxsVms800LPLqqQwx');
-const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 require('dotenv').config();
+const stripe = require("stripe")(process.env.Stripe_Secrate_Key);
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const port = process.env.PORT || 5000;
 
 
@@ -67,6 +67,9 @@ async function run() {
         // Admin verification middle-were
         const verifyAdmin = async (req, res, next) => {
             const email = req.decoded.email;
+            console.log("the email is:", email);
+
+            
             const query = { email: email };
             const user = await userCollection.findOne(query)
             const isAdmin = user?.role === "admin";
@@ -199,12 +202,55 @@ async function run() {
         // set paid itme with detail to db
         app.post('/payments', async (req, res) => {
             const paymentDetail = req.body;
-            console.log("data from paid items", paymentDetail);
-            const result = await paymentCollection.insertOne(paymentDetail)
-            res.send(result)
+            const paymentResult = await paymentCollection.insertOne(paymentDetail);
+
+            // delete the paid item from the cart
+            const query = {
+                _id: {
+                    $in: paymentDetail.cartIds.map(id => new ObjectId(id))
+                }
+            }
+            const deletedResult = await cardsCollection.deleteMany(query)
+            res.send({ paymentResult, deletedResult })
         })
 
+        // api for get payment history for payer
+        app.get('/payment/:email', verifyToken, async (req, res) => {
+            const query = { email: req.params.email };
+            if (req.params.email !== req.decoded.email) {
+                return res.status(403).send({ message: "Forbidden Access" })
+            }
+            const resutl = await paymentCollection.find(query).toArray()
+            res.send(resutl)
 
+        })
+
+        // admin state api for admin home page
+        app.get('/admin-state', verifyToken, async (req, res) => {
+            const totalUser = await userCollection.estimatedDocumentCount();
+            const menuItems = await menuCollection.estimatedDocumentCount();
+            const orders = await paymentCollection.estimatedDocumentCount();
+            const result = await paymentCollection.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalRevenue: {
+                            $sum: '$paidAmount'
+                        }
+                    }
+                }
+            ]).toArray();
+
+            const revenue = result.length > 0 ? result[0].totalRevenue : 0;
+
+
+            res.send({
+                totalUser,
+                menuItems,
+                orders,
+                revenue
+            })
+        })
 
 
 
